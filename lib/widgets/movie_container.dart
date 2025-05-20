@@ -2,19 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:frontend/widgets/custom_rating_bar.dart';
 
 class MovieContainer extends StatelessWidget {
-  final String imageUrl;
-  final double rating; // De 0 a 5
+  final Map<String, dynamic> movie;
   final Widget destination;
 
   const MovieContainer({
     super.key,
-    required this.imageUrl,
-    required this.rating,
+    required this.movie,
     required this.destination,
   });
 
   @override
   Widget build(BuildContext context) {
+    final String imageUrl = movie['poster_path'] != null
+        ? 'https://image.tmdb.org/t/p/w300${movie['poster_path']}'
+        : '';
+    final double rating = (movie['vote_average'] as num).toDouble() / 2.0;
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -23,17 +26,19 @@ class MovieContainer extends StatelessWidget {
         );
       },
       child: Hero(
-        tag: 'dash',
+        tag: 'movie_${movie['id']}',
         child: Column(
           children: [
             Container(
               width: 186,
               height: 261,
               decoration: ShapeDecoration(
-                image: DecorationImage(
+                image: imageUrl.isNotEmpty
+                    ? DecorationImage(
                   image: NetworkImage(imageUrl),
                   fit: BoxFit.cover,
-                ),
+                )
+                    : null,
                 shape: RoundedRectangleBorder(
                   side: const BorderSide(
                     width: 1,
@@ -42,6 +47,11 @@ class MovieContainer extends StatelessWidget {
                   borderRadius: BorderRadius.circular(5),
                 ),
               ),
+              child: imageUrl.isEmpty
+                  ? const Center(
+                child: Icon(Icons.broken_image, color: Colors.white),
+              )
+                  : null,
             ),
             const SizedBox(height: 4),
             Row(

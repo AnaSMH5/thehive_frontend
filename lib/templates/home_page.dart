@@ -8,11 +8,25 @@ import 'package:frontend/widgets/popular_movie_reviews.dart';
 import 'package:frontend/widgets/latest_news.dart';
 import 'package:frontend/widgets/footer.dart';
 import 'package:frontend/widgets/news_card.dart';
+import 'package:frontend/movies.dart';
 
-class HomePage extends StatelessWidget {
-  HomePage({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final ScrollController _scrollController = ScrollController();
+  final MovieService _movieService = MovieService();
+  late Future<List<dynamic>> _popularMovies;
+
+  @override
+  void initState() {
+    super.initState();
+    _popularMovies = _movieService.getPopularMovies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,17 +97,41 @@ class HomePage extends StatelessWidget {
             // Popular Movies This Week
             const SizedBox(height: 10),
             // Carrusel de películas
-            HorizontalCarousel(
-              controller: _scrollController,
-              scrollOffset: 700,
-              title: ' Popular Movies This Week',
-              children: List.generate(10, (i) {
-                return MovieContainer(
-                  imageUrl: 'https://th.bing.com/th/id/OIP.r4WsATN-ZpypH0VxtbOfjAHaLH?rs=1&pid=ImgDetMain',
-                  rating: 4.5,
-                  destination: const NewsDetailPage(),
+            // Future significa que no lo va a hacer en el momento, lo puede resolver en el futuro, con una llamada http
+            // List<dynamic> representa los datos que va a devolver la API (una lista de objetos tipo mapa).
+            FutureBuilder<List<dynamic>>(
+              // dato asíncrono a esperar, la lista de películas
+              future: _popularMovies,
+              // Se llama cada vez que el estado de Future cambia
+              builder: (context, snapshot) {
+                // snapshot contiene el estado de future, connectionState muestra si está esperando, completado o falló.
+                // Si todavía no terminó la carga, muestra un icono y reserva el espacio
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const SizedBox(
+                    height: 300,
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
+                // mensaje de error si ocurrió uno al llamar la API
+                if (snapshot.hasError) {
+                  return Text('Error al cargar películas: ${snapshot.error}');
+                }
+                // snapshot.data! contiene la lista de películas
+                final movies = snapshot.data!;
+                final children = movies.map((movie) {
+                  return MovieContainer(
+                    movie: movie,
+                    destination: NewsDetailPage(), // Cambiá esto si querés ir a otra vista
+                  );
+                }).toList();
+
+                return HorizontalCarousel(
+                  controller: _scrollController,
+                  scrollOffset: 800,
+                  title: ' Popular Movies ',
+                  children: children,
                 );
-              }),
+              },
             ),
             const SizedBox(height: 50),
             // Frases en Hexágonos
