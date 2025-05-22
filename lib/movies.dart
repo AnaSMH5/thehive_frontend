@@ -20,7 +20,7 @@ class MovieService {
       final data = json.decode(response.body);
       return data['results'];
     } else {
-      throw Exception('Error al obtener películas populares: ${response.statusCode}');
+      throw Exception('Error getting Popular Movies: ${response.statusCode}');
     }
   }
 }

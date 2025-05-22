@@ -54,6 +54,7 @@ class AppTextTheme {
             fontSize: 12,
             fontWeight: FontWeight.w400,
             color: Color(0xFFF9F9F9))
+
     );
   }
 }

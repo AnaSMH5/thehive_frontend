@@ -4,14 +4,14 @@ class NewsCard extends StatelessWidget {
   final String imageUrl;
   final String section;
   final String title;
-  final Widget destination; // Callback para la acción al hacer clic
+  final Widget destination;
 
   const NewsCard({
     super.key,
     required this.imageUrl,
     required this.section,
     required this.title,
-    required this.destination, // Añade el callback requerido
+    required this.destination,
   });
 
   @override
@@ -20,7 +20,7 @@ class NewsCard extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => destination), // Usa el Widget destino
+          MaterialPageRoute(builder: (context) => destination),
         );
       },
       child: Column(

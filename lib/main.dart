@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
         colorScheme: const ColorScheme.dark(
             primary: Color(0xFFFFECB8), // Peach - Color principal
             secondary: Color(0xFF50B2C0), // Moonstone - Color de acento
-            surface: Color(0xFFFFECB8), // Peach - Para fondos secundarios
+            surface: Color(0xFFECA204), // Harvest Gold - Para fondos secundarios
             error: Color(0xFFECA204), // Harvest Gold - Error
             onPrimary: Color(0xFF351904), // Bistre - Texto sobre colores primarios
             onSecondary: Color(0xFF351904), // Bistre - Texto sobre colores secundarios

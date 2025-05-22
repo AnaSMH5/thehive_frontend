@@ -74,6 +74,7 @@ flutter:
     - assets/icons/logo+title.svg
     - assets/icons/logofooter.svg
     - assets/icons/home_page_background_image.png
+    - assets/icons/background_register.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

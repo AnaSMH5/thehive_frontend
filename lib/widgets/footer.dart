@@ -20,7 +20,7 @@ class Footer extends StatelessWidget {
               width: screenWidth, // Establece el ancho al ancho de la pantalla
               height: 80,
               child: SvgPicture.asset(
-                'assets/icons/logofooter.svg',
+                'assets/icons/background_register.svg',
                 fit: BoxFit.fitWidth,
                 // No especificamos la altura para que se ajuste proporcionalmente
               ),

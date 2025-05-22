@@ -111,9 +111,7 @@ class _HomePageState extends State<HomePage> {
                     height: 300,
                     child: Center(child: CircularProgressIndicator()),
                   );
-                }
-                // mensaje de error si ocurrió uno al llamar la API
-                if (snapshot.hasError) {
+                } else if (snapshot.hasError) { // mensaje de error si ocurrió uno al llamar la API
                   return Text('Error al cargar películas: ${snapshot.error}');
                 }
                 // snapshot.data! contiene la lista de películas
@@ -124,7 +122,6 @@ class _HomePageState extends State<HomePage> {
                     destination: NewsDetailPage(), // Cambiá esto si querés ir a otra vista
                   );
                 }).toList();
-
                 return HorizontalCarousel(
                   controller: _scrollController,
                   scrollOffset: 800,
