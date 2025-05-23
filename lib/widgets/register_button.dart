@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:frontend/templates/login_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:frontend/widgets/text_field.dart';
+import 'package:frontend/widgets/register_form.dart';
+import 'package:frontend/login_get_token.dart';
 
 class RegisterButton extends StatelessWidget {
   const RegisterButton({super.key});
@@ -14,6 +15,7 @@ class RegisterButton extends StatelessWidget {
     final dateController = TextEditingController();
     final genderController = TextEditingController();
     final passwordController = TextEditingController();
+    final usernameController = TextEditingController();
 
     showDialog(
       context: context,
@@ -40,98 +42,14 @@ class RegisterButton extends StatelessWidget {
               ),
             ],
           ),
-          content: SingleChildScrollView(
-            child: Form(
-              key: formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CustomTextField(
-                    controller: nameController,
-                    textLabel: 'Full Name',
-                    validator: (value){
-                      if (value == null || value.isEmpty || value.length < 3){
-                        return 'The name is a must (minimun 3 characters)';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 25.0),
-                  CustomTextField(
-                      controller: emailController,
-                      textLabel: 'Email Address',
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (value){
-                        if (value == null || value.isEmpty) {
-                          return 'The email is a must';
-                        }
-                        if (!RegExp(r'^[\w.-]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                          return 'Invalid email format';
-                        }
-                        return null;
-                      },
-                  ),
-                  const SizedBox(height: 25.0),
-                  CustomTextField(
-                      controller: dateController,
-                      textLabel: 'Birth-Date (YYYY-MM-DD)',
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Birth date is required';
-                        }
-
-                        final date = DateTime.tryParse(value);
-                        // Si es nulo significa que no se convirtió correctamente, formato inválido
-                        if (date == null) {
-                          return 'Invalid format. Use YYYY-MM-DD';
-                        }
-
-                        final today = DateTime.now();
-                        final thirteenYearsAgo = DateTime(today.year - 13, today.month, today.day);
-                        // La fecha debe ser antes o igual a hoy menos 13 años
-                        if (date.isAfter(thirteenYearsAgo)) {
-                          return 'You must be at least 13 years old';
-                        }
-
-                        return null;
-                      }
-                  ),
-                  const SizedBox(height: 25.0),
-                  CustomTextField(
-                    controller: genderController,
-                    textLabel: 'Gender (male/female/other)',
-                    validator: (value){
-                      if (value == null || value.isEmpty) {
-                        return 'Gender is required';
-                      }
-
-                      final lower = value.toLowerCase();
-
-                      if (lower != 'male' && lower != 'female' && lower != 'other') {
-                        return 'Gender must be male, female or other. No spaces';
-                      }
-
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 25.0),
-                  CustomTextField(
-                    controller: passwordController,
-                    textLabel: 'Password',
-                    obscureText: true,
-                    validator: (value){
-                      if (value == null || value.isEmpty) {
-                        return 'Password is required';
-                      }
-                      if (value.length < 8) {
-                        return 'Password must be at least 8 characters long';
-                      }
-                      return null;
-                    },
-                  ),
-                ],
-              ),
-            ),
+          content: RegisterForm(
+            formKey: formKey,
+            nameController: nameController,
+            usernameController: usernameController,
+            emailController: emailController,
+            dateController: dateController,
+            genderController: genderController,
+            passwordController: passwordController,
           ),
           actionsAlignment: MainAxisAlignment.center,
           actions: [
@@ -155,27 +73,73 @@ class RegisterButton extends StatelessWidget {
                       "user_gender": genderController.text,
                       "password": passwordController.text,
                     };
-
+                    // Crear Usuario
                     final response = await http.post(
                       Uri.parse('https://thehive.up.railway.app/api/v1/users/signup'),
                       headers: {"Content-Type": "application/json"},
                       body: json.encode(userData),
                     );
 
-                    // Verifica si el widget todavía está montado
-                    if (!context.mounted) return;
-
                     if (response.statusCode == 201 || response.statusCode == 200) {
-                      // Registro exitoso
-                      Navigator.of(context).pop();
-                      // Redirige directamente sin mostrar mensajes
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoginPage()), // Cambia a tu página destino
+                      // Obtener Bearer Token - Hacer Login
+                      final token = await loginGetToken(emailController.text, passwordController.text);
+                      // Crear Profile
+                      final profileResponse = await http.post(
+                        Uri.parse('https://thehive.up.railway.app/api/v1/profiles/'),
+                        headers: {
+                          'Content-Type': 'application/json',
+                          'Authorization': 'Bearer $token',
+                        },
+                        body: json.encode({
+                          'username': usernameController.text,
+                          'description': '',
+                          'profile_role': 'subscriber', // predeterminado
+                          'image_rel_path' : '',
+                        }),
                       );
+                    // Verifica si el widget todavía está montado
+                      if (!context.mounted) return;
+                      if (profileResponse.statusCode == 201 || profileResponse.statusCode == 200){
+                        // Registro y creación de profile exitosos
+                        Navigator.of(context).pop();
+                        // Redirige directamente sin mostrar mensajes
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoginPage()), // Cambiar pagina a homepage2
+                        );
+                      } else {
+                        // Error al registrar
+                        final errorProfile = json.decode(profileResponse.body);
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text(
+                              'Failed to Create Profile',
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.displayLarge,
+                            ),
+                            content: Text(
+                              errorProfile['detail'] ?? 'Unexpected error occurred',
+                              style: Theme.of(context).textTheme.headlineMedium,
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: Text(
+                                  'OK',
+                                  style: Theme.of(context).textTheme.labelMedium,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+
                     } else {
                       // Error al registrar
                       final error = json.decode(response.body);
+                      // Verifica si el widget todavía está montado
+                      if (!context.mounted) return;
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(

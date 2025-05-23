@@ -14,6 +14,7 @@ class LoginPopup extends StatelessWidget {
     final dateController = TextEditingController();
     final genderController = TextEditingController();
     final passwordController = TextEditingController();
+    final usernameController = TextEditingController();
 
     showDialog(
       context: context,
@@ -51,7 +52,30 @@ class LoginPopup extends StatelessWidget {
                     textLabel: 'Full Name',
                     validator: (value){
                       if (value == null || value.isEmpty || value.length < 3){
-                        return 'The name is a must (minimun 3 characters)';
+                        return 'A name is required: minimun 3 characters';
+                      }
+                      // Verifica si contiene algún número
+                      if (RegExp(r'[0-9]').hasMatch(value)) {
+                        return 'The name must not contain numbers';
+                      }
+                      // Verificar que el nombre no contenga caracteres especiales
+                      if (RegExp(r'[!@#\$%^&*(),.?":{}|<>]').hasMatch(value)) {
+                        return 'The name must not contain special characters';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 25.0),
+                  CustomTextField(
+                    controller: usernameController,
+                    textLabel: 'Username',
+                    validator: (value){
+                      if (value == null || value.isEmpty){
+                        return 'Username is required';
+                      }
+
+                      if (value.length < 4 || value.length > 20){
+                        return 'The username must have between 4 and 20 characters';
                       }
                       return null;
                     },
@@ -63,8 +87,9 @@ class LoginPopup extends StatelessWidget {
                     keyboardType: TextInputType.emailAddress,
                     validator: (value){
                       if (value == null || value.isEmpty) {
-                        return 'The email is a must';
+                        return 'An email is required';
                       }
+                      // Verifica el formato, que contenga caracteres, luego un @ y el.com/.net/.org/.co
                       if (!RegExp(r'^[\w.-]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
                         return 'Invalid email format';
                       }
@@ -162,20 +187,65 @@ class LoginPopup extends StatelessWidget {
                       body: json.encode(userData),
                     );
 
-                    // Verifica si el widget todavía está montado
-                    if (!context.mounted) return;
-
                     if (response.statusCode == 201 || response.statusCode == 200) {
-                      // Registro exitoso
-                      Navigator.of(context).pop();
-                      // Redirige directamente sin mostrar mensajes
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoginPage()), // Cambia a tu página destino
+                      // Crear perfil
+                      final profileData = {
+                        "username": usernameController.text,
+                        "description": "",
+                        "profile_role": "subscriber",
+                        "image_rel_path": ""
+                      };
+
+                      final profileResponse = await http.post(
+                        Uri.parse('https://thehive.up.railway.app/api/v1/profiles/'),
+                        headers: {"Content-Type": "application/json"},
+                        body: json.encode(profileData),
                       );
+
+                      if (response.statusCode == 201 || response.statusCode == 200){
+                        // Verifica si el widget todavía está montado
+                        if (!context.mounted) return;
+
+                        // Registro exitoso y Creación de Perfil Exitoso
+                        Navigator.of(context).pop();
+                        // Redirige directamente sin mostrar mensajes
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoginPage()), // Cambia a tu página destino
+                        );
+                      } else {
+                        final error = json.decode(profileResponse.body);
+                        // Verifica si el widget todavía está montado
+                        if (!context.mounted) return;
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text(
+                              'Profile Creation Failed',
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.displayLarge,
+                            ),
+                            content: Text(
+                              error['detail'] ?? 'Unexpected error occurred',
+                              style: Theme.of(context).textTheme.headlineMedium,
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: Text(
+                                  'OK',
+                                  style: Theme.of(context).textTheme.labelMedium,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
                     } else {
                       // Error al registrar
                       final error = json.decode(response.body);
+                      // Verifica si el widget todavía está montado
+                      if (!context.mounted) return;
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
