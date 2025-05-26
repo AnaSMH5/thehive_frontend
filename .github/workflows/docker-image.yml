@@ -3,8 +3,6 @@ name: Docker Image CI
 on:
   push:
     branches: ["main"]
-  pull_request:
-    branches: ["main"]
 
 jobs:
   build:
@@ -16,7 +14,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.22.0" # Ajusta según la versión que usas
+          flutter-version: "3.22.0"
 
       - name: Install dependencies
         run: flutter pub get
@@ -24,5 +22,5 @@ jobs:
       - name: Build Flutter Web
         run: flutter build web
 
-      - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      - name: Docker build
+        run: docker build . --file Dockerfile --tag flutter-web:latest
