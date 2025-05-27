@@ -30,18 +30,18 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
 
-          # Guardar build temporalmente (fuera del repo)
+          # Mover build a un lugar temporal fuera del repo
           mkdir -p /tmp/flutter-web-build
           cp -r build/web/* /tmp/flutter-web-build/
 
-          # Crear rama limpia
+          # Cambiar a rama deploy
           git fetch
           git checkout --orphan deploy
           git reset --hard
           git clean -fdx
 
-          # Copiar archivos al root del proyecto
-          cp -r temp-build/* .
+          # Copiar desde /tmp al root del proyecto
+          cp -r /tmp/flutter-web-build/* .
 
           # Commit y push
           git add .
