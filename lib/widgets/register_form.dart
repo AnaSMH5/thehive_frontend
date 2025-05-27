@@ -131,8 +131,8 @@ class _RegisterFormState extends State<RegisterForm> {
                 if (value == null || value.isEmpty) {
                   return 'A password is required';
                 }
-                if (value.length < 8 || value.length > 16) {
-                  return 'Password must be between 8 and 16 characters';
+                if (value.length < 8 || value.length > 15) {
+                  return 'Password must be between 8 and 15 characters';
                 }
                 // Verifica si no contiene números
                 if (!RegExp(r'[0-9]').hasMatch(value)) {

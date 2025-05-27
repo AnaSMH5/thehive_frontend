@@ -4,13 +4,13 @@ import 'package:frontend/widgets/text_field.dart';
 import 'package:frontend/login_get_token.dart';
 
 Future<void> showLoginPopUp(BuildContext context) {
-  final formKey = GlobalKey<FormState>();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-
   return showDialog(
     context: context,
     builder: (context) {
+      final formKey = GlobalKey<FormState>();
+      final emailController = TextEditingController();
+      final passwordController = TextEditingController();
+
       return AlertDialog(
         backgroundColor: Theme.of(context).colorScheme.primary,  // Hacer el fondo del Dialog transparente
         title: Row(
@@ -64,8 +64,8 @@ Future<void> showLoginPopUp(BuildContext context) {
                     if (value == null || value.isEmpty) {
                       return 'Password is required';
                     }
-                    if (value.length < 8 || value.length > 16) {
-                      return 'Password must be between 8 and 16 characters';
+                    if (value.length < 8 || value.length > 15) {
+                      return 'Password must be between 8 and 15 characters';
                     }
                     return null;
                   },
@@ -89,22 +89,43 @@ Future<void> showLoginPopUp(BuildContext context) {
               ),
               onPressed: () async {
                 if (formKey.currentState!.validate()) {
-                  final token = await loginGetToken(emailController.text, passwordController.text);
+                  try {
+                    final token = await loginGetToken(emailController.text, passwordController.text);
 
-                  if (token.isNotEmpty){
+                    if (token.isNotEmpty){
+                      if (!context.mounted) return;
+                      Navigator.of(context).pop();
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginPage()), // Cambiar pagina a homepage2
+                      );
+                    } else {
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Login failed. Please try again.')),
+                      );
+                    }
+                  } catch (e) {
+                    String errorMessage = e.toString();
+
+                    if (errorMessage.startsWith('Exception: ')) {
+                      errorMessage = errorMessage.replaceFirst('Exception: ', '');
+                    }
                     if (!context.mounted) return;
-                    Navigator.of(context).pop();
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginPage()), // Cambiar pagina a homepage2
-                    );
-                  } else {
-                    if (!context.mounted) return;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Login failed. Please try again.')),
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        content: SizedBox(
+                          width: 220,
+                          child: Text(
+                            'Login failed: $errorMessage',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        ),
+                      ),
                     );
                   }
-
                 }
               },
             ),
