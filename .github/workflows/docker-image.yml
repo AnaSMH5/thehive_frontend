@@ -22,8 +22,8 @@ jobs:
       - name: Build Flutter Web
         run: flutter build web
 
-      - name: Verifica build
+      - name: List build/web contents
         run: ls -la build/web
 
-      - name: Docker build
-        run: docker build . --file Dockerfile --tag flutter-web:latest --no-cache
+      - name: Build Docker image
+        run: docker build . --file Dockerfile --tag flutter-web:latest
