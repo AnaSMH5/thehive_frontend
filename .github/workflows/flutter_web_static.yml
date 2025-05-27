@@ -33,7 +33,11 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
 
+<<<<<<< HEAD
           # Mover build a un lugar temporal fuera del repo
+=======
+          # Guardar build temporalmente (fuera del repo)
+>>>>>>> d436c24 (Fixed some things)
           mkdir -p /tmp/flutter-web-build
           cp -r build/web/* /tmp/flutter-web-build/
 
