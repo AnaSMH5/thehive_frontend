@@ -3,7 +3,7 @@ import 'dart:convert';
 
 Future<String> loginGetToken(String email, String password) async {
   final response = await http.post(
-    Uri.parse('https://thehive.up.railway.app/api/v1/login/access-token'),
+    Uri.parse('https://thehive-api.up.railway.app/api/v1/login/access-token'),
     headers: {"Content-Type": "application/x-www-form-urlencoded"},
     body: {
       'username': email,

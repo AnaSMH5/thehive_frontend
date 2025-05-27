@@ -2,15 +2,21 @@ import 'package:flutter/material.dart';
 
 class NavTextButton extends StatefulWidget {
   final String label;
-  final Widget destination;
+  final Widget? destination;
+  final VoidCallback? onTap;
   final double width;
 
   const NavTextButton({
     super.key,
     required this.label,
-    required this.destination,
+    this.destination,
+    this.onTap,
     this.width = 60,
-  });
+  }) : assert(
+      (destination == null && onTap != null) ||
+      (destination != null && onTap == null),
+      'Debe proveer destination o onTap'
+  );
 
   @override
   State<NavTextButton> createState() => _NavTextButtonState();
@@ -29,10 +35,14 @@ class _NavTextButtonState extends State<NavTextButton> {
       onExit: (_) => setState(() => _isHovered = false),
       child: TextButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => widget.destination),
-          );
+          if (widget.onTap != null) {
+            widget.onTap!();
+          } else if (widget.destination != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => widget.destination!),
+            );
+          }
         },
         child: SizedBox(
           width: widget.width,

@@ -75,7 +75,7 @@ class RegisterButton extends StatelessWidget {
                     };
                     // Crear Usuario
                     final response = await http.post(
-                      Uri.parse('https://thehive.up.railway.app/api/v1/users/signup'),
+                      Uri.parse('https://thehive-api.up.railway.app/api/v1/users/signup'),
                       headers: {"Content-Type": "application/json"},
                       body: json.encode(userData),
                     );
@@ -85,7 +85,7 @@ class RegisterButton extends StatelessWidget {
                       final token = await loginGetToken(emailController.text, passwordController.text);
                       // Crear Profile
                       final profileResponse = await http.post(
-                        Uri.parse('https://thehive.up.railway.app/api/v1/profiles/'),
+                        Uri.parse('https://thehive-api.up.railway.app/api/v1/profiles/'),
                         headers: {
                           'Content-Type': 'application/json',
                           'Authorization': 'Bearer $token',

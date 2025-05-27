@@ -134,6 +134,14 @@ class _RegisterFormState extends State<RegisterForm> {
                 if (value.length < 8) {
                   return 'Password must be at least 8 characters long';
                 }
+                // Verifica si no contiene números
+                if (!RegExp(r'[0-9]').hasMatch(value)) {
+                  return 'Password must contain at least one number.';
+                }
+                // Verifica si no contiene caracteres especiales
+                if (!RegExp(r'[!@#\$%^&*(),.?":{}|<>]').hasMatch(value)) {
+                  return 'Password must contain at least a special character.';
+                }
                 return null;
               },
             ),

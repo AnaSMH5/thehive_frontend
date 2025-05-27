@@ -13,7 +13,7 @@ class LatestNews extends StatelessWidget {
 
   Future<List<dynamic>> fetchLatestNewsletter() async {
     try {
-      final url = Uri.parse('https://thehive.up.railway.app/api/v1/articles/newsletter/latest');
+      final url = Uri.parse('https://thehive-api.up.railway.app/api/v1/articles/newsletter/latest');
       final response = await http.get(url);
 
       if (response.statusCode == 200) {

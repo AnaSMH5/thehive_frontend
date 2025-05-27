@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:frontend/widgets/login_popup.dart';
 import 'package:frontend/widgets/nav_text_button.dart';
 import 'package:frontend/templates/login_page.dart';
+import 'package:frontend/templates/home_page.dart';
 
 class CustomNavigationBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomNavigationBar({super.key});
@@ -25,7 +27,7 @@ class CustomNavigationBar extends StatelessWidget implements PreferredSizeWidget
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const LoginPage()), // Cambiar a HomePage
+                  MaterialPageRoute(builder: (context) => const HomePage()),
                 );
               },
               child: SvgPicture.asset(
@@ -39,7 +41,10 @@ class CustomNavigationBar extends StatelessWidget implements PreferredSizeWidget
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                NavTextButton(label: 'ENTER', destination: const LoginPage(), width: 61)
+                NavTextButton(
+                    label: 'ENTER',
+                    onTap: () => showLoginPopUp(context),
+                    width: 61)
               ],
             ),
             Column(
