@@ -1,0 +1,49 @@
+name: Flutter Web Static Deployment
+
+on:
+  push:
+    branches: ["master"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.32.0"
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Flutter Web
+        run: flutter build web
+
+      - name: List build/web contents
+        run: ls -la build/web
+
+      - name: Deploy to Railway (deploy branch)
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+
+          # Check out a new orphan branch for deployment
+          git fetch
+          git checkout --orphan deploy
+
+          # Clear all files from git history
+          git reset --hard
+          git clean -fdx
+
+          # Copy web build files into root
+          cp -r build/web/* .
+
+          # Add and commit
+          git add .
+          git commit -m "Deploy from GitHub Actions"
+
+          # Force push to deploy branch
+          git push --force origin deploy
