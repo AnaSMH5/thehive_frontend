@@ -30,20 +30,20 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
 
-          # Check out a new orphan branch for deployment
+          # Guardar build temporalmente
+          mkdir temp-build
+          cp -r build/web/* temp-build/
+
+          # Crear rama limpia
           git fetch
           git checkout --orphan deploy
-
-          # Clear all files from git history
           git reset --hard
           git clean -fdx
 
-          # Copy web build files into root
-          cp -r build/web/* .
+          # Copiar archivos al root del proyecto
+          cp -r temp-build/* .
 
-          # Add and commit
+          # Commit y push
           git add .
           git commit -m "Deploy from GitHub Actions"
-
-          # Force push to deploy branch
           git push --force origin deploy
