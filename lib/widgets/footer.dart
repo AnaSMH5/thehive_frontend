@@ -12,7 +12,8 @@ class Footer extends StatelessWidget {
       height: 180,
       color: Theme.of(context).scaffoldBackgroundColor,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center, // Centra los elementos verticalmente
+        mainAxisAlignment:
+            MainAxisAlignment.center, // Centra los elementos verticalmente
         children: [
           Padding(
             padding: const EdgeInsets.only(bottom: 10),
@@ -20,7 +21,7 @@ class Footer extends StatelessWidget {
               width: screenWidth, // Establece el ancho al ancho de la pantalla
               height: 80,
               child: SvgPicture.asset(
-                'assets/icons/background_register.svg',
+                'assets/icons/logofooter.svg',
                 fit: BoxFit.fitWidth,
                 // No especificamos la altura para que se ajuste proporcionalmente
               ),
