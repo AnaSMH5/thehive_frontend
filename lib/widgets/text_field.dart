@@ -6,6 +6,7 @@ class CustomTextField extends StatefulWidget{
   final TextInputType keyboardType;
   final bool obscureText;
   final String? Function(String?)? validator;
+  final AutovalidateMode? autovalidateMode;
 
   const CustomTextField({
     super.key,
@@ -14,6 +15,7 @@ class CustomTextField extends StatefulWidget{
     this.keyboardType = TextInputType.text,
     this.obscureText = false,
     this.validator,
+    this.autovalidateMode,
   });
 
   @override
@@ -91,6 +93,7 @@ class CustomTextFieldState extends State<CustomTextField> {
                     : null,  // Hace el suffixIcon opcional
               ),
               validator: widget.validator,
+              autovalidateMode : widget.autovalidateMode,
               cursorColor: Theme.of(context).colorScheme.onPrimary,
             ),
           ),

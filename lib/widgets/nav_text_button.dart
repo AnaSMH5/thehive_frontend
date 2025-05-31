@@ -38,10 +38,17 @@ class _NavTextButtonState extends State<NavTextButton> {
           if (widget.onTap != null) {
             widget.onTap!();
           } else if (widget.destination != null) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => widget.destination!),
-            );
+            final currentRoute = ModalRoute.of(context);
+            final destinationType = widget.destination.runtimeType;
+
+            final isSamePage = currentRoute?.settings.name == destinationType.toString();
+
+            if (!isSamePage) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => widget.destination!),
+              );
+            }
           }
         },
         child: SizedBox(

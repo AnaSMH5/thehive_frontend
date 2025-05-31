@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/widgets/navigation_bar_in.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -6,9 +7,13 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
-      body: const Center(
-        child: Text('Bienvenido a la página de login'),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            NavigationBarIn(),
+            Text('Bienvenido a la página de login'),
+          ],
+        )
       ),
     );
   }

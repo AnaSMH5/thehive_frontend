@@ -3,7 +3,7 @@ import 'package:frontend/templates/login_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:frontend/widgets/register_form.dart';
-import 'package:frontend/login_get_token.dart';
+import 'package:frontend/services/auth_service.dart';
 
 class RegisterButton extends StatelessWidget {
   const RegisterButton({super.key});
@@ -82,83 +82,105 @@ class RegisterButton extends StatelessWidget {
 
                     if (response.statusCode == 201 || response.statusCode == 200) {
                       // Obtener Bearer Token - Hacer Login
-                      final token = await loginGetToken(emailController.text, passwordController.text);
-                      // Crear Profile
-                      final profileResponse = await http.post(
-                        Uri.parse('https://thehive-api.up.railway.app/api/v1/profiles/'),
-                        headers: {
-                          'Content-Type': 'application/json',
-                          'Authorization': 'Bearer $token',
-                        },
-                        body: json.encode({
-                          'username': usernameController.text,
-                          'description': '',
-                          'profile_role': 'subscriber', // predeterminado
-                          'image_rel_path' : '',
-                        }),
-                      );
-                    // Verifica si el widget todavía está montado
-                      if (!context.mounted) return;
-                      if (profileResponse.statusCode == 201 || profileResponse.statusCode == 200){
-                        // Registro y creación de profile exitosos
-                        Navigator.of(context).pop();
-                        // Redirige directamente sin mostrar mensajes
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => LoginPage()), // Cambiar pagina a homepage2
+                      // Hacer login automáticamente
+                      final loginError = await AuthService.login(emailController.text, passwordController.text);
+
+                      if (loginError == null) {
+                        // Obtener token guardado
+                        final token = await AuthService.getToken();
+                        // Crear perfil
+                        final profileResponse = await http.post(
+                          Uri.parse('https://thehive-api.up.railway.app/api/v1/profiles/'),
+                          headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer $token',
+                          },
+                          body: json.encode({
+                            'username': usernameController.text,
+                            'description': '',
+                            'profile_role': 'subscriber',
+                            'image_rel_path': '',
+                          }),
                         );
+
+                        // Verifica si el widget todavía está montado
+                        if (!context.mounted) return;
+                        if (profileResponse.statusCode == 201 || profileResponse.statusCode == 200){
+                          // Registro y creación de profile exitosos, cerrar popup de registro
+                          Navigator.of(context).pop();
+                          // Redirige directamente sin mostrar mensajes
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => LoginPage()), // Cambiar pagina a homepage2
+                          );
+                        } else {
+                          // Error al registrar
+                          final errorProfile = json.decode(profileResponse.body);
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: Text(
+                                'Failed to Create Profile',
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.displayLarge,
+                              ),
+                              content: Text(
+                                errorProfile['detail'] ?? 'Unexpected error occurred',
+                                style: Theme.of(context).textTheme.headlineMedium,
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: Text(
+                                    'OK',
+                                    style: Theme.of(context).textTheme.labelMedium,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
                       } else {
-                        // Error al registrar
-                        final errorProfile = json.decode(profileResponse.body);
+                        // Login falló
+                        final error = json.decode(response.body);
+                        // Verifica si el widget todavía está montado
+                        if (!context.mounted) return;
                         showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
                             title: Text(
-                              'Failed to Create Profile',
+                              'Registration Failed',
                               textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.displayLarge,
                             ),
                             content: Text(
-                              errorProfile['detail'] ?? 'Unexpected error occurred',
+                              error['detail'] ?? 'Unexpected error occurred',
                               style: Theme.of(context).textTheme.headlineMedium,
                             ),
                             actions: [
                               TextButton(
                                 onPressed: () => Navigator.of(context).pop(),
                                 child: Text(
-                                  'OK',
-                                  style: Theme.of(context).textTheme.labelMedium,
+                                    'OK',
+                                    style: Theme.of(context).textTheme.labelMedium,
                                 ),
                               ),
                             ],
                           ),
                         );
                       }
-
                     } else {
-                      // Error al registrar
                       final error = json.decode(response.body);
-                      // Verifica si el widget todavía está montado
                       if (!context.mounted) return;
                       showDialog(
                         context: context,
-                        builder: (context) => AlertDialog(
-                          title: Text(
-                            'Registration Failed',
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.displayLarge,
-                          ),
-                          content: Text(
-                            error['detail'] ?? 'Unexpected error occurred',
-                            style: Theme.of(context).textTheme.headlineMedium,
-                          ),
+                        builder: (_) => AlertDialog(
+                          title: const Text('Registration Failed'),
+                          content: Text(error['detail'] ?? 'Unexpected error'),
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.of(context).pop(),
-                              child: Text(
-                                  'OK',
-                                  style: Theme.of(context).textTheme.labelMedium,
-                              ),
+                              child: const Text('OK'),
                             ),
                           ],
                         ),

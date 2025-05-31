@@ -37,6 +37,7 @@ class _RegisterFormState extends State<RegisterForm> {
             CustomTextField(
               controller: widget.nameController,
               textLabel: 'Full Name',
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: (value){
                 if (value == null || value.isEmpty || value.length < 3){
                   return 'A name is required (minimun 3 characters)';
@@ -56,6 +57,7 @@ class _RegisterFormState extends State<RegisterForm> {
             CustomTextField(
               controller: widget.usernameController,
               textLabel: 'Username',
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: (value){
                 if (value == null || value.isEmpty || value.length < 3 || value.length >20){
                   return 'An username is required, must contain between 5 and 20 characters';
@@ -68,6 +70,7 @@ class _RegisterFormState extends State<RegisterForm> {
               controller: widget.emailController,
               textLabel: 'Email Address',
               keyboardType: TextInputType.emailAddress,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: (value){
                 if (value == null || value.isEmpty) {
                   return 'An email is required';
@@ -83,6 +86,7 @@ class _RegisterFormState extends State<RegisterForm> {
             CustomTextField(
                 controller: widget.dateController,
                 textLabel: 'Birth-Date (YYYY-MM-DD)',
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'A birth date is required';
@@ -108,6 +112,7 @@ class _RegisterFormState extends State<RegisterForm> {
             CustomTextField(
               controller: widget.genderController,
               textLabel: 'Gender (male/female/other)',
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: (value){
                 if (value == null || value.isEmpty) {
                   return 'A gender is required';
@@ -127,6 +132,7 @@ class _RegisterFormState extends State<RegisterForm> {
               controller: widget.passwordController,
               textLabel: 'Password',
               obscureText: true,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: (value){
                 if (value == null || value.isEmpty) {
                   return 'A password is required';
@@ -139,8 +145,16 @@ class _RegisterFormState extends State<RegisterForm> {
                   return 'Password must contain at least one number.';
                 }
                 // Verifica si no contiene caracteres especiales
-                if (!RegExp(r'[!@#\$%^&*(),.?":{}|<>]').hasMatch(value)) {
+                if (!RegExp(r"[!@#\$%^&*()_\-+=\[\]{}|\\:;\"'<>,.?/~`]').hasMatch(value)) {
                   return 'Password must contain at least a special character.';
+                }
+                // Verifica si no contiene una letra mayúscula
+                if (!RegExp(r'[A-Z]').hasMatch(value)) {
+                  return 'Password must contain at least one uppercase letter.';
+                }
+                // Verifica si no contiene una letra minúscula
+                if (!RegExp(r'[a-z]').hasMatch(value)) {
+                  return 'Password must contain at least one lowercase letter.';
                 }
                 return null;
               },

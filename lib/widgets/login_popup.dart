@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/templates/login_page.dart';
 import 'package:frontend/widgets/text_field.dart';
-import 'package:frontend/login_get_token.dart';
+import 'package:frontend/services/auth_service.dart';
 
 Future<void> showLoginPopUp(BuildContext context) {
   return showDialog(
@@ -44,6 +44,7 @@ Future<void> showLoginPopUp(BuildContext context) {
                   controller: emailController,
                   textLabel: 'Email Address',
                   keyboardType: TextInputType.emailAddress,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (value){
                     if (value == null || value.isEmpty) {
                       return 'An email is required';
@@ -60,6 +61,7 @@ Future<void> showLoginPopUp(BuildContext context) {
                   controller: passwordController,
                   textLabel: 'Password',
                   obscureText: true,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (value){
                     if (value == null || value.isEmpty) {
                       return 'Password is required';
@@ -89,28 +91,18 @@ Future<void> showLoginPopUp(BuildContext context) {
               ),
               onPressed: () async {
                 if (formKey.currentState!.validate()) {
-                  try {
-                    final token = await loginGetToken(emailController.text, passwordController.text);
+                  // Llamamos a login que devuelve String? errorMessage
+                  final errorMessage = await AuthService.login(emailController.text, passwordController.text);
 
-                    if (token.isNotEmpty){
-                      if (!context.mounted) return;
-                      Navigator.of(context).pop();
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoginPage()), // Cambiar pagina a homepage2
-                      );
-                    } else {
-                      if (!context.mounted) return;
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Login failed. Please try again.')),
-                      );
-                    }
-                  } catch (e) {
-                    String errorMessage = e.toString();
-
-                    if (errorMessage.startsWith('Exception: ')) {
-                      errorMessage = errorMessage.replaceFirst('Exception: ', '');
-                    }
+                  if (errorMessage == null) {
+                    // Login exitoso
+                    if (!context.mounted) return;
+                    Navigator.of(context).pop();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginPage()), // Cambiar pagina a homepage2
+                    );
+                  } else {
                     if (!context.mounted) return;
                     showDialog(
                       context: context,
