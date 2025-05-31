@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:frontend/widgets/root_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:frontend/widgets/nav_text_button.dart';
@@ -53,7 +54,8 @@ class _NavigationBarInState extends State<NavigationBarIn> {
   @override
   void initState() {
     super.initState();
-    imageUrl = getImageRelPath(); // Llamar a la función async que obtendrá la URL
+    imageUrl =
+        getImageRelPath(); // Llamar a la función async que obtendrá la URL
   }
 
   @override
@@ -62,11 +64,14 @@ class _NavigationBarInState extends State<NavigationBarIn> {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 75, vertical: 10),
-
-      decoration: ShapeDecoration(
+      padding: const EdgeInsets.symmetric(horizontal: 180, vertical: 10),
+      decoration: BoxDecoration(
         color: theme.colorScheme.primary,
-        shape: const RoundedRectangleBorder(),
+        border: Border(
+            bottom: BorderSide(
+          color: theme.colorScheme.onPrimary,
+          width: 2.0,
+        )),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -77,7 +82,9 @@ class _NavigationBarInState extends State<NavigationBarIn> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const LoginPage()), // cambiar a home page 2
+                MaterialPageRoute(
+                    builder: (context) =>
+                        const LoginPage()), // cambiar a home page 2
               );
             },
             child: SvgPicture.asset(
@@ -85,25 +92,27 @@ class _NavigationBarInState extends State<NavigationBarIn> {
               height: 40,
             ),
           ),
-          const SizedBox(width: 29),
-          NavTextButton (
-              label: 'HOME',
-              destination: const LoginPage() // Destinación a home page 2
+          const Spacer(
+            flex: 3,
           ),
-          const SizedBox(width: 19),
-          NavTextButton(
-              label: 'FILMS',
-              destination: const MoviePage()
-          ),
-          const SizedBox(width: 19),
-          NavTextButton(
-              label: 'WATCHLIST', width: 105,
-              destination: const LoginPage() // Change the destination
-          ),
-          const SizedBox(width: 19),
-          NavTextButton(
-              label: 'NEWS',
-              destination: const LoginPage() // Change the destination
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              NavTextButton(
+                  label: 'HOME',
+                  destination: const LoginPage() // Destinación a home page 2
+                  ),
+              NavTextButton(label: 'FILMS', destination: const MoviePage()),
+              NavTextButton(
+                  label: 'WATCHLIST',
+                  destination: const LoginPage() // Change the destination
+                  ),
+              NavTextButton(
+                  label: 'NEWS',
+                  destination: const LoginPage() // Change the destination
+                  ),
+            ],
           ),
           // Empujar iconos a la derecha
           const Spacer(),
@@ -113,7 +122,8 @@ class _NavigationBarInState extends State<NavigationBarIn> {
             iconSize: 28, // Tamaño del icono de búsqueda
             onPressed: () {
               // Acción al presionar búsqueda
-              debugPrint('Search Tapped'); // CAMBIAR POR LA ACCION CORRECTA, MIENTRAS ESTA ESO PA SABER QUE SIRVE
+              debugPrint(
+                  'Search Tapped'); // CAMBIAR POR LA ACCION CORRECTA, MIENTRAS ESTA ESO PA SABER QUE SIRVE
             },
           ),
           const SizedBox(width: 12),
@@ -129,16 +139,31 @@ class _NavigationBarInState extends State<NavigationBarIn> {
                 );
               } else {
                 final imageUrl = snapshot.data;
-                return CircleAvatar(
-                  radius: 20,
-                  backgroundImage: imageUrl != null && imageUrl.isNotEmpty
-                      ? NetworkImage(imageUrl)
-                      : null,
-                  backgroundColor: const Color(0xFF50B2C0),
-                  child: imageUrl == null || imageUrl.isEmpty
-                      ? const Icon(Icons.person, size: 30, color: Color(0xFFF9F9F9))
-                      : null,
-                );
+                return MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: () async {
+                        await AuthService.logout();
+                        if (mounted) {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const RootPage()),
+                          );
+                        }
+                      },
+                      child: CircleAvatar(
+                        radius: 20,
+                        backgroundColor: const Color(0xFF50B2C0),
+                        backgroundImage: imageUrl != null
+                            ? NetworkImage(
+                                'https://thehive-api.up.railway.app$imageUrl')
+                            : null,
+                        child: imageUrl == null
+                            ? const Icon(Icons.person, color: Color(0xFFFFECB8))
+                            : null,
+                      ),
+                    ));
               }
             },
           )
