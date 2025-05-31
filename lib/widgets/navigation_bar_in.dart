@@ -143,12 +143,11 @@ class _NavigationBarInState extends State<NavigationBarIn> {
                     cursor: SystemMouseCursors.click,
                     child: GestureDetector(
                       onTap: () async {
+                        final navigator = Navigator.of(context);
                         await AuthService.logout();
                         if (mounted) {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const RootPage()),
+                          navigator.pushReplacement(
+                            MaterialPageRoute(builder: (context) => const RootPage()),
                           );
                         }
                       },
