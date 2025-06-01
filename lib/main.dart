@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/theme/text_theme.dart';
 import 'package:frontend/widgets/root_page.dart';
-//import 'package:frontend/widgets/movie_container.dart';
 
 void main() {
   runApp(const MyApp());

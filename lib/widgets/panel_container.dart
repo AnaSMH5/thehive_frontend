@@ -10,11 +10,11 @@ class ShapedContainer extends StatefulWidget {
   final double height;
 
   const ShapedContainer({
-    Key? key,
+    super.key,
     required this.imageUrl,
     this.width = 200, // Default width for the container
     this.height = 150, // Default height for the container
-  }) : super(key: key);
+  });
 
   @override
   State<ShapedContainer> createState() => _ShapedContainerState();

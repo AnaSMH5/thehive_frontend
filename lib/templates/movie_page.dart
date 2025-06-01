@@ -7,6 +7,7 @@ import 'package:frontend/widgets/movie_container.dart';
 import 'package:frontend/templates/login_page.dart';
 import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/widgets/navigation_bar.dart';
+import 'package:frontend/widgets/movie_scroll.dart';
 
 class MoviePage extends StatefulWidget {
   const MoviePage({super.key});
@@ -17,20 +18,11 @@ class MoviePage extends StatefulWidget {
 
 class _MoviePageState extends State<MoviePage> {
   String? _token;
-  final ScrollController _scrollController1 = ScrollController();
-  final ScrollController _scrollController2 = ScrollController();
-  final ScrollController _scrollController3 = ScrollController();
   final MovieService _movieService = MovieService();
-  late Future<List<dynamic>> _topRated;
-  late Future<List<dynamic>> _popularColombia;
-  late Future<List<dynamic>> _trendingWeek;
 
   @override
   void initState() {
     super.initState();
-    _topRated = _movieService.getTopRated();
-    _popularColombia = _movieService.getPopularColombia();
-    _trendingWeek = _movieService.getTrendingWeek();
     _loadToken();
   }
 
@@ -52,39 +44,12 @@ class _MoviePageState extends State<MoviePage> {
             else
               CustomNavigationBar(),
             const SizedBox(height: 50),
-            // Upcoming Movies
-            FutureBuilder<List<dynamic>>(
-              future: _popularColombia,
-              // Se llama cada vez que el estado de Future cambia
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const SizedBox(
-                    height: 300,
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                } else if (snapshot.hasError) { // mensaje de error si ocurrió uno al llamar la API
-                  return Text('Error al cargar películas populares en Colombia: ${snapshot.error}');
-                }
-                // snapshot.data! contiene la lista de películas
-                final movies = snapshot.data!;
-                final children = movies.map((movie) {
-                  return MovieContainer(
-                    movie: movie,
-                    destination: LoginPage(), // CAMBIAR PARA QUE VAYA A MOVIE DETAILS PAGE
-                  );
-                }).toList();
-                return HorizontalCarousel(
-                  controller: _scrollController2,
-                  scrollOffset: MediaQuery.of(context).size.width * 0.8,
-                  title: ' Top 10 Popular Movies This Year in Colombia ',
-                  children: children,
-                );
-              },
-            ),
+            // Popular Movies in Colombia in The Year
+            const MovieScroll(),
             const SizedBox(height: 50),
             // Trending Movies This Week
             FutureBuilder<List<dynamic>>(
-              future: _trendingWeek,
+              future: _movieService.getTrendingWeek(),
               // Se llama cada vez que el estado de Future cambia
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -104,7 +69,7 @@ class _MoviePageState extends State<MoviePage> {
                   );
                 }).toList();
                 return HorizontalCarousel(
-                  controller: _scrollController3,
+                  controller: ScrollController(),
                   scrollOffset: MediaQuery.of(context).size.width * 0.7,
                   title: ' Trending Movies This Week ',
                   children: children,
@@ -117,7 +82,7 @@ class _MoviePageState extends State<MoviePage> {
             // List<dynamic> representa los datos que va a devolver la API (una lista de objetos tipo mapa).
             FutureBuilder<List<dynamic>>(
               // dato asíncrono a esperar, la lista de películas
-              future: _topRated,
+              future: _movieService.getTopRated(),
               // Se llama cada vez que el estado de Future cambia
               builder: (context, snapshot) {
                 // snapshot contiene el estado de future, connectionState muestra si está esperando, completado o falló.
@@ -139,9 +104,241 @@ class _MoviePageState extends State<MoviePage> {
                   );
                 }).toList();
                 return HorizontalCarousel(
-                  controller: _scrollController1,
+                  controller: ScrollController(),
                   scrollOffset: MediaQuery.of(context).size.width * 0.7,
                   title: ' Top Rated Movies ',
+                  children: children,
+                );
+              },
+            ),
+            const SizedBox(height: 50),
+            // Popular Family Movies
+            FutureBuilder<List<dynamic>>(
+              future: _movieService.getFamily(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const SizedBox(
+                    height: 300,
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error al cargar películas populares de familia: ${snapshot.error}');
+                }
+                // snapshot.data! contiene la lista de películas
+                final movies = snapshot.data!;
+                final children = movies.map((movie) {
+                  return MovieContainer(
+                    movie: movie,
+                    destination: LoginPage(), // CAMBIAR PARA QUE VAYA A MOVIE DETAILS PAGE
+                  );
+                }).toList();
+                return HorizontalCarousel(
+                  controller: ScrollController(),
+                  scrollOffset: MediaQuery.of(context).size.width * 0.7,
+                  title: ' Family Movies ',
+                  children: children,
+                );
+              },
+            ),
+            const SizedBox(height: 50),
+            // Popular Aventura y Acción Movies
+            FutureBuilder<List<dynamic>>(
+              future: _movieService.getActionAdventure(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const SizedBox(
+                    height: 300,
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error al cargar películas populares de romance: ${snapshot.error}');
+                }
+                // snapshot.data! contiene la lista de películas
+                final movies = snapshot.data!;
+                final children = movies.map((movie) {
+                  return MovieContainer(
+                    movie: movie,
+                    destination: LoginPage(), // CAMBIAR PARA QUE VAYA A MOVIE DETAILS PAGE
+                  );
+                }).toList();
+                return HorizontalCarousel(
+                  controller: ScrollController(),
+                  scrollOffset: MediaQuery.of(context).size.width * 0.7,
+                  title: ' Action and Adventure Movies ',
+                  children: children,
+                );
+              },
+            ),
+            const SizedBox(height: 50),
+            // Popular Animated Movies
+            FutureBuilder<List<dynamic>>(
+              future: _movieService.getAnimated(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const SizedBox(
+                    height: 300,
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error al cargar películas populares de romance: ${snapshot.error}');
+                }
+                // snapshot.data! contiene la lista de películas
+                final movies = snapshot.data!;
+                final children = movies.map((movie) {
+                  return MovieContainer(
+                    movie: movie,
+                    destination: LoginPage(), // CAMBIAR PARA QUE VAYA A MOVIE DETAILS PAGE
+                  );
+                }).toList();
+                return HorizontalCarousel(
+                  controller: ScrollController(),
+                  scrollOffset: MediaQuery.of(context).size.width * 0.7,
+                  title: ' Animated Movies ',
+                  children: children,
+                );
+              },
+            ),
+            const SizedBox(height: 50),
+            // Popular Romance Movies
+            FutureBuilder<List<dynamic>>(
+              future: _movieService.getRomance(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const SizedBox(
+                    height: 300,
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error al cargar películas populares de romance: ${snapshot.error}');
+                }
+                // snapshot.data! contiene la lista de películas
+                final movies = snapshot.data!;
+                final children = movies.map((movie) {
+                  return MovieContainer(
+                    movie: movie,
+                    destination: LoginPage(), // CAMBIAR PARA QUE VAYA A MOVIE DETAILS PAGE
+                  );
+                }).toList();
+                return HorizontalCarousel(
+                  controller: ScrollController(),
+                  scrollOffset: MediaQuery.of(context).size.width * 0.7,
+                  title: ' Romance Movies ',
+                  children: children,
+                );
+              },
+            ),
+            const SizedBox(height: 50),
+            // Popular Fantasy Movies
+            FutureBuilder<List<dynamic>>(
+              future: _movieService.getFantasy(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const SizedBox(
+                    height: 300,
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error al cargar películas populares de romance: ${snapshot.error}');
+                }
+                // snapshot.data! contiene la lista de películas
+                final movies = snapshot.data!;
+                final children = movies.map((movie) {
+                  return MovieContainer(
+                    movie: movie,
+                    destination: LoginPage(), // CAMBIAR PARA QUE VAYA A MOVIE DETAILS PAGE
+                  );
+                }).toList();
+                return HorizontalCarousel(
+                  controller: ScrollController(),
+                  scrollOffset: MediaQuery.of(context).size.width * 0.7,
+                  title: ' Fantasy Movies ',
+                  children: children,
+                );
+              },
+            ),
+            const SizedBox(height: 50),
+            // Popular Horror Movies
+            FutureBuilder<List<dynamic>>(
+              future: _movieService.getHorror(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const SizedBox(
+                    height: 300,
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error al cargar películas populares de romance: ${snapshot.error}');
+                }
+                // snapshot.data! contiene la lista de películas
+                final movies = snapshot.data!;
+                final children = movies.map((movie) {
+                  return MovieContainer(
+                    movie: movie,
+                    destination: LoginPage(), // CAMBIAR PARA QUE VAYA A MOVIE DETAILS PAGE
+                  );
+                }).toList();
+                return HorizontalCarousel(
+                  controller: ScrollController(),
+                  scrollOffset: MediaQuery.of(context).size.width * 0.7,
+                  title: ' Horror Movies ',
+                  children: children,
+                );
+              },
+            ),
+            const SizedBox(height: 50),
+            // Popular Science Fiction Movies
+            FutureBuilder<List<dynamic>>(
+              future: _movieService.getScienceFiction(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const SizedBox(
+                    height: 300,
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error al cargar películas populares de romance: ${snapshot.error}');
+                }
+                // snapshot.data! contiene la lista de películas
+                final movies = snapshot.data!;
+                final children = movies.map((movie) {
+                  return MovieContainer(
+                    movie: movie,
+                    destination: LoginPage(), // CAMBIAR PARA QUE VAYA A MOVIE DETAILS PAGE
+                  );
+                }).toList();
+                return HorizontalCarousel(
+                  controller: ScrollController(),
+                  scrollOffset: MediaQuery.of(context).size.width * 0.7,
+                  title: 'Science Fiction Movies ',
+                  children: children,
+                );
+              },
+            ),
+            const SizedBox(height: 50),
+            // Popular Drama Movies
+            FutureBuilder<List<dynamic>>(
+              future: _movieService.getDrama(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const SizedBox(
+                    height: 300,
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error al cargar películas populares de romance: ${snapshot.error}');
+                }
+                // snapshot.data! contiene la lista de películas
+                final movies = snapshot.data!;
+                final children = movies.map((movie) {
+                  return MovieContainer(
+                    movie: movie,
+                    destination: LoginPage(), // CAMBIAR PARA QUE VAYA A MOVIE DETAILS PAGE
+                  );
+                }).toList();
+                return HorizontalCarousel(
+                  controller: ScrollController(),
+                  scrollOffset: MediaQuery.of(context).size.width * 0.7,
+                  title: ' Drama Movies ',
                   children: children,
                 );
               },
