@@ -54,7 +54,6 @@ class _LoginPageState extends State<LoginPage> {
                     final movies = snapshot.data!;
                     final children = movies.map((movie) {
                       return MovieContainer(
-                        iteration: 0,
                         movie: movie,
                         destination:
                             LoginPage(), // CAMBIAR PARA QUE VAYA A MOVIE DETAILS PAGE
