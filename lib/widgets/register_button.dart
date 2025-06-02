@@ -8,7 +8,7 @@ import 'package:frontend/services/auth_service.dart';
 class RegisterButton extends StatelessWidget {
   const RegisterButton({super.key});
 
-  void _showRegisterDialog(BuildContext context) {
+  void showRegisterDialog(BuildContext context) {
     final formKey = GlobalKey<FormState>();
     final nameController = TextEditingController();
     final emailController = TextEditingController();
@@ -21,15 +21,19 @@ class RegisterButton extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: Theme.of(context).colorScheme.primary,  // Hacer el fondo del Dialog transparente
+          backgroundColor: Theme.of(context)
+              .colorScheme
+              .primary, // Hacer el fondo del Dialog transparente
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Be Part of The Hive!',
-                style: TextStyle(fontFamily: 'Aboreto',
-                    fontSize: 22,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF351904),
+              Text(
+                'Be Part of The Hive!',
+                style: TextStyle(
+                  fontFamily: 'Aboreto',
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF351904),
                 ),
               ),
               IconButton(
@@ -38,8 +42,7 @@ class RegisterButton extends StatelessWidget {
                     color: Color(0xFF351904),
                   ),
                   onPressed: () => Navigator.of(context).pop(),
-                  tooltip: 'Close'
-              ),
+                  tooltip: 'Close'),
             ],
           ),
           content: RegisterForm(
@@ -75,22 +78,26 @@ class RegisterButton extends StatelessWidget {
                     };
                     // Crear Usuario
                     final response = await http.post(
-                      Uri.parse('https://thehive-api.up.railway.app/api/v1/users/signup'),
+                      Uri.parse(
+                          'https://thehive-api.up.railway.app/api/v1/users/signup'),
                       headers: {"Content-Type": "application/json"},
                       body: json.encode(userData),
                     );
 
-                    if (response.statusCode == 201 || response.statusCode == 200) {
+                    if (response.statusCode == 201 ||
+                        response.statusCode == 200) {
                       // Obtener Bearer Token - Hacer Login
                       // Hacer login automáticamente
-                      final loginError = await AuthService.login(emailController.text, passwordController.text);
+                      final loginError = await AuthService.login(
+                          emailController.text, passwordController.text);
 
                       if (loginError == null) {
                         // Obtener token guardado
                         final token = await AuthService.getToken();
                         // Crear perfil
                         final profileResponse = await http.post(
-                          Uri.parse('https://thehive-api.up.railway.app/api/v1/profiles/'),
+                          Uri.parse(
+                              'https://thehive-api.up.railway.app/api/v1/profiles/'),
                           headers: {
                             'Content-Type': 'application/json',
                             'Authorization': 'Bearer $token',
@@ -105,17 +112,21 @@ class RegisterButton extends StatelessWidget {
 
                         // Verifica si el widget todavía está montado
                         if (!context.mounted) return;
-                        if (profileResponse.statusCode == 201 || profileResponse.statusCode == 200){
+                        if (profileResponse.statusCode == 201 ||
+                            profileResponse.statusCode == 200) {
                           // Registro y creación de profile exitosos, cerrar popup de registro
                           Navigator.of(context).pop();
                           // Redirige directamente sin mostrar mensajes
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (context) => LoginPage()), // Cambiar pagina a homepage2
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    LoginPage()), // Cambiar pagina a homepage2
                           );
                         } else {
                           // Error al registrar
-                          final errorProfile = json.decode(profileResponse.body);
+                          final errorProfile =
+                              json.decode(profileResponse.body);
                           showDialog(
                             context: context,
                             builder: (context) => AlertDialog(
@@ -125,15 +136,18 @@ class RegisterButton extends StatelessWidget {
                                 style: Theme.of(context).textTheme.displayLarge,
                               ),
                               content: Text(
-                                errorProfile['detail'] ?? 'Unexpected error occurred',
-                                style: Theme.of(context).textTheme.headlineMedium,
+                                errorProfile['detail'] ??
+                                    'Unexpected error occurred',
+                                style:
+                                    Theme.of(context).textTheme.headlineMedium,
                               ),
                               actions: [
                                 TextButton(
                                   onPressed: () => Navigator.of(context).pop(),
                                   child: Text(
                                     'OK',
-                                    style: Theme.of(context).textTheme.labelMedium,
+                                    style:
+                                        Theme.of(context).textTheme.labelMedium,
                                   ),
                                 ),
                               ],
@@ -161,8 +175,9 @@ class RegisterButton extends StatelessWidget {
                               TextButton(
                                 onPressed: () => Navigator.of(context).pop(),
                                 child: Text(
-                                    'OK',
-                                    style: Theme.of(context).textTheme.labelMedium,
+                                  'OK',
+                                  style:
+                                      Theme.of(context).textTheme.labelMedium,
                                 ),
                               ),
                             ],
@@ -209,7 +224,7 @@ class RegisterButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(5),
           ),
         ),
-        onPressed: () => _showRegisterDialog(context),
+        onPressed: () => showRegisterDialog(context),
         child: Text(
           'Register now!',
           style: Theme.of(context)

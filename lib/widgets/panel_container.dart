@@ -91,7 +91,7 @@ class _ShapedContainerState extends State<ShapedContainer> {
               );
             },
             child: SvgPicture.asset(
-              '../../assets/icons/shaped_container.svg',
+              'assets/icons/shaped_container.svg',
               // No need for key here as we're not querying its paintBounds directly for the shader
               width:
                   widget.width, // Ensure SVG fills the ShaderMask's child area
