@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/widgets/navigation_widget/navigation_bar.dart';
-import 'package:frontend/widgets/register_button.dart';
-import 'package:frontend/widgets/movie_container.dart';
-import 'package:frontend/widgets/horizontal_carousel.dart';
-import 'package:frontend/widgets/phrase_hexagon.dart';
-import 'package:frontend/widgets/popular_movie_reviews.dart';
-import 'package:frontend/widgets/latest_news.dart';
-import 'package:frontend/widgets/footer.dart';
-import 'package:frontend/widgets/news_card.dart';
+import 'package:frontend/widgets/auth_related_widgets/register_button.dart';
+import 'package:frontend/widgets/movies_related_widgets/movie_container.dart';
+import 'package:frontend/widgets/movies_related_widgets/horizontal_carousel.dart';
+import 'package:frontend/widgets/utils/phrase_hexagon.dart';
+import 'package:frontend/widgets/movies_related_widgets/popular_movie_reviews.dart';
+import 'package:frontend/widgets/news_related_widgets/latest_news.dart';
+import 'package:frontend/widgets/utils/footer.dart';
+import 'package:frontend/widgets/news_related_widgets/news_card.dart';
 import 'package:frontend/services/movies_service.dart';
 
 class HomePage extends StatefulWidget {
@@ -139,11 +139,12 @@ class _HomePageState extends State<HomePage> {
               // Frases en Hexágonos
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 200.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                child: Wrap(
+                  alignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 20, // Espacio entre hexágonos
+                  runSpacing: 20, // Espacio entre filas de hexágonos
                   children: [
-                    const Spacer(),
                     Column(
                       children: [
                         SizedBox(
@@ -153,8 +154,7 @@ class _HomePageState extends State<HomePage> {
                               phrase: 'Explore the hive of entertainment'),
                         ),
                       ],
-                    ),
-                    SizedBox(width: 20), // Espacio entre hexágonos
+                    ), // Espacio entre hexágonos
                     Column(
                       children: [
                         SizedBox(
@@ -165,7 +165,6 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
-                    SizedBox(width: 20),
                     Column(
                       children: [
                         SizedBox(
@@ -175,7 +174,6 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
-                    const Spacer(),
                   ],
                 ),
               ),
@@ -183,9 +181,11 @@ class _HomePageState extends State<HomePage> {
               Text('THE BEST OF CINEMA, RATED BY YOU',
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.displayMedium),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Wrap(
+                alignment: WrapAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.start,
+                spacing: 30, // Espacio entre columnas
+                runSpacing: 50, // Espacio entre filas
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -205,9 +205,19 @@ class _HomePageState extends State<HomePage> {
                           thickness: 2,
                         ),
                       ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(height: 5),
+                          SizedBox(
+                            width: 680,
+                            child: PopularMovieReviews(
+                                scrollDirection: Axis.vertical),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
-                  SizedBox(width: 30), // Separador entre ambos
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -228,35 +238,17 @@ class _HomePageState extends State<HomePage> {
                           thickness: 2,
                         ),
                       ),
-                    ],
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(height: 5),
-                      SizedBox(
-                        width: 680,
-                        child:
-                            PopularMovieReviews(scrollDirection: Axis.vertical),
-                      ),
-                    ],
-                  ),
-                  SizedBox(width: 30), // Separador entre ambos
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // Espacio entre linea y latest news
-                      SizedBox(height: 5),
-                      // Línea
-                      SizedBox(
-                        width: 480,
-                        child: LatestNews(scrollDirection: Axis.vertical),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // Espacio entre linea y latest news
+                          SizedBox(height: 5),
+                          // Línea
+                          SizedBox(
+                            width: 480,
+                            child: LatestNews(scrollDirection: Axis.vertical),
+                          ),
+                        ],
                       ),
                     ],
                   ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend/widgets/root_page_controller.dart';
+import 'package:frontend/widgets/utils/side_profile_menu_widget.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:frontend/widgets/navigation_widget/nav_text_button.dart';
@@ -17,8 +18,8 @@ Future<String?> getImageRelPath() async {
     return null;
   }
 
-  final String baseUrl = 'https://thehive-api.up.railway.app/api/v1/profiles';
-  final url = Uri.parse('$baseUrl/$userId');
+  final url = Uri.parse(
+      'https://thehive-api.up.railway.app/api/v1/profiles/my-profile');
 
   final response = await http.get(
     url,
@@ -131,39 +132,52 @@ class _NavigationBarInState extends State<NavigationBarIn> {
             future: imageUrl,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: CircleAvatar(
-                    radius: 20,
-                    backgroundColor: const Color(0xFFFFECB8),
-                    child: const CircularProgressIndicator(),
-                  ),
-                );
+                return Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: const Color(0xFF351904),
+                        width: 2.0,
+                      ),
+                      shape: BoxShape.circle,
+                    ),
+                    child: MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: CircleAvatar(
+                        radius: 18,
+                        backgroundColor: const Color(0xFFFFECB8),
+                        child: const CircularProgressIndicator(),
+                      ),
+                    ));
               } else {
                 final imageUrl = snapshot.data;
-                return MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: GestureDetector(
-                    onTap: () async {
-                      await AuthService.logout();
-                      if (mounted) {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const RootPage()),
+                return Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: const Color(0xFF351904),
+                      width: 2.0,
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                  child: MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          barrierColor: Colors.black.withAlpha((0.7 * 255)
+                              .toInt()), // semi-transparent black background
+                          builder: (context) => const SideUserMenu(),
                         );
-                      }
-                    },
-                    child: CircleAvatar(
-                      radius: 20,
-                      backgroundColor: const Color(0xFF50B2C0),
-                      backgroundImage: imageUrl != null
-                          ? NetworkImage(
-                              'https://thehive-api.up.railway.app$imageUrl')
-                          : null,
-                      child: imageUrl == null
-                          ? const Icon(Icons.person, color: Color(0xFFFFECB8))
-                          : null,
+                      },
+                      child: CircleAvatar(
+                        radius: 18,
+                        backgroundColor: const Color(0xFF50B2C0),
+                        backgroundImage:
+                            imageUrl != null ? NetworkImage(imageUrl) : null,
+                        child: imageUrl == null
+                            ? const Icon(Icons.person, color: Color(0xFFFFECB8))
+                            : null,
+                      ),
                     ),
                   ),
                 );

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend/templates/movie_page.dart';
-import 'package:frontend/widgets/login_popup.dart';
+import 'package:frontend/widgets/auth_related_widgets/login_popup.dart';
 import 'package:frontend/widgets/navigation_widget/nav_text_button.dart';
-import 'package:frontend/widgets/register_button.dart';
+import 'package:frontend/widgets/auth_related_widgets/register_button.dart';
 import 'package:frontend/widgets/root_page_controller.dart';
 
 class CustomNavigationBar extends StatelessWidget

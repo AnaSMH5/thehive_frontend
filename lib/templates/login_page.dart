@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/widgets/latest_news_carrousel.dart';
+import 'package:frontend/widgets/news_related_widgets/latest_news_carrousel.dart';
 import 'package:frontend/widgets/navigation_widget/nav_bar_controller.dart';
-import 'package:frontend/widgets/footer.dart';
-import 'package:frontend/widgets/horizontal_carousel.dart';
+import 'package:frontend/widgets/utils/footer.dart';
+import 'package:frontend/widgets/movies_related_widgets/horizontal_carousel.dart';
 import 'package:frontend/services/movies_service.dart';
-import 'package:frontend/widgets/movie_container.dart';
+import 'package:frontend/widgets/movies_related_widgets/movie_container.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

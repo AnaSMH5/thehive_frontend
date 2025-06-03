@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/templates/home_page.dart';
 import 'package:frontend/templates/login_page.dart';
 import 'package:frontend/services/auth_service.dart';
+import 'package:frontend/templates/profile_page.dart';
 
 class RootPage extends StatelessWidget {
   const RootPage({super.key});
