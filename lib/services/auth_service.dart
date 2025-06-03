@@ -73,4 +73,9 @@ class AuthService {
       return null;
     }
   }
+
+  static Future<bool> isLoggedIn() async {
+    final token = await AuthService.getToken();
+    return token != null && token.isNotEmpty;
+  }
 }

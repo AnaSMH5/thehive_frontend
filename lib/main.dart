@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/theme/text_theme.dart';
 import 'package:frontend/widgets/root_page_controller.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
-void main() {
+void main() async {
+  await initializeDateFormatting('es_MX', null);
   runApp(const MyApp());
 }
 
@@ -36,13 +38,10 @@ class MyApp extends StatelessWidget {
           colorScheme: const ColorScheme.dark(
               primary: Color(0xFFFFECB8), // Peach - Color principal
               secondary: Color(0xFF50B2C0), // Moonstone - Color de acento
-              surface:
-              Color(0xFFECA204), // Harvest Gold - Para fondos secundarios
+              surface: Color(0xFFECA204), // Harvest Gold - Para fondos secundarios
               error: Color(0xFFECA204), // Harvest Gold - Error
-              onPrimary:
-              Color(0xFF351904), // Bistre - Texto sobre colores primarios
-              onSecondary:
-              Color(0xFF351904), // Bistre - Texto sobre colores secundarios
+              onPrimary: Color(0xFF351904), // Bistre - Texto sobre colores primarios
+              onSecondary: Color(0xFF351904), // Bistre - Texto sobre colores secundarios
               onSurface: Color(0xFFF9F9F9), // Seasalt - Sobre el fondo
               onError: Color(0xFF0F110C), // Night sobre errores
               brightness: Brightness.dark),

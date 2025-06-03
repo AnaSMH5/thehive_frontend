@@ -55,8 +55,6 @@ class LoginPageState extends State<LoginPage> {
                     final children = movies.map((movie) {
                       return MovieContainer(
                         movie: movie,
-                        destination:
-                            LoginPage(), // CAMBIAR PARA QUE VAYA A MOVIE DETAILS PAGE
                       );
                     }).toList();
                     return HorizontalCarousel(

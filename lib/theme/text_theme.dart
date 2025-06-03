@@ -11,17 +11,27 @@ class AppTextTheme {
             color: Color(0xFFF9F9F9)),
         // Second homepage phrase (Aboreto 40)
         displayMedium: TextStyle(
-            fontFamily: 'Aboreto', fontSize: 40, color: Color(0xFFF9F9F9)),
-
+            fontFamily: 'Aboreto',
+            fontSize: 40,
+            color: Color(0xFFF9F9F9)
+        ),
         // Movie titles (Aboreto 30)
         headlineLarge: TextStyle(
-            fontFamily: 'Aboreto', fontSize: 30, color: Color(0xFFF9F9F9)),
+            fontFamily: 'Aboreto',
+            fontSize: 30,
+            color: Color(0xFFF9F9F9)
+        ),
         // Section titles (Jost 30)
         headlineMedium: TextStyle(
             fontFamily: 'Jost',
             fontSize: 30,
             fontWeight: FontWeight.w400,
             color: Color(0xFFF9F9F9)),
+        headlineSmall: TextStyle(
+            fontFamily: 'Aboreto',
+            fontSize: 24,
+            color: Color(0xFFF9F9F9)
+        ),
 
         // Homepage registration phrases (Jost 24)
         titleLarge: TextStyle(
@@ -39,6 +49,11 @@ class AppTextTheme {
         // News names (Aboreto 20)
         bodyMedium: TextStyle(
             fontFamily: 'Aboreto',
+            fontSize: 20,
+            fontWeight: FontWeight.w400,
+            color: Color(0xFFF9F9F9)),
+        bodySmall: TextStyle(
+            fontFamily: 'Jost',
             fontSize: 20,
             fontWeight: FontWeight.w400,
             color: Color(0xFFF9F9F9)),

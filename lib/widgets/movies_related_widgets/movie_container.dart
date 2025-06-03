@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/widgets/movies_related_widgets/custom_rating_bar.dart';
+import 'package:frontend/templates/movie_details_page.dart';
 
 class MovieContainer extends StatelessWidget {
   final Map<String, dynamic> movie;
-  final Widget destination;
   final int iteration;
 
   const MovieContainer({
     super.key,
     required this.movie,
-    required this.destination,
     this.iteration = 0,
   });
 
@@ -25,7 +24,8 @@ class MovieContainer extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => destination), // Usa el Widget destino
+            builder: (context) => MovieDetailsPage(movieId: movie['id']),
+          ),
         );
       },
       child: Hero(

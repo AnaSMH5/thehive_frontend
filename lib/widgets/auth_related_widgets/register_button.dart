@@ -5,6 +5,8 @@ import 'dart:convert';
 import 'package:frontend/widgets/auth_related_widgets/register_form.dart';
 import 'package:frontend/services/auth_service.dart';
 
+String _baseUrl = 'https://thehive-api.up.railway.app/api/v1';
+
 class RegisterButton extends StatelessWidget {
   const RegisterButton({super.key});
 
@@ -79,13 +81,12 @@ class RegisterButton extends StatelessWidget {
                     // Crear Usuario
                     final response = await http.post(
                       Uri.parse(
-                          'https://thehive-api.up.railway.app/api/v1/users/signup'),
+                          '$_baseUrl/users/signup'),
                       headers: {"Content-Type": "application/json"},
                       body: json.encode(userData),
                     );
 
-                    if (response.statusCode == 201 ||
-                        response.statusCode == 200) {
+                    if (response.statusCode == 201 || response.statusCode == 200) {
                       // Obtener Bearer Token - Hacer Login
                       // Hacer login automáticamente
                       final loginError = await AuthService.login(
@@ -96,8 +97,7 @@ class RegisterButton extends StatelessWidget {
                         final token = await AuthService.getToken();
                         // Crear perfil
                         final profileResponse = await http.post(
-                          Uri.parse(
-                              'https://thehive-api.up.railway.app/api/v1/profiles/'),
+                          Uri.parse('$_baseUrl/profiles/'),
                           headers: {
                             'Content-Type': 'application/json',
                             'Authorization': 'Bearer $token',
@@ -110,10 +110,32 @@ class RegisterButton extends StatelessWidget {
                           }),
                         );
 
-                        // Verifica si el widget todavía está montado
-                        if (!context.mounted) return;
-                        if (profileResponse.statusCode == 201 ||
-                            profileResponse.statusCode == 200) {
+                        if (profileResponse.statusCode == 201 || profileResponse.statusCode == 200) {
+                          // Crear listas automáticamente cuando se registra un usuario
+                          Future<void> createDefaultList(String name) async {
+                            final listResponse = await http.post(
+                              Uri.parse('$_baseUrl/lists/'),
+                              headers: {
+                                'Authorization': 'Bearer $token',
+                                'Content-Type': 'application/json',
+                              },
+                              body: json.encode({
+                                'name': name,
+                                'description': 'Lista automática de $name',
+                                'privacy': true,
+                              }),
+                            );
+                            if (listResponse.statusCode != 201 && listResponse.statusCode != 200) {
+                              debugPrint('Error creando la lista $name: ${listResponse.body}');
+                            }
+                          }
+                          // Crear listas de Me gusta y Watchlist
+                          await createDefaultList('Me gusta');
+                          await createDefaultList('Watchlist');
+                          await createDefaultList('Vistas');
+
+                          // Verifica si el widget todavía está montado
+                          if (!context.mounted) return;
                           // Registro y creación de profile exitosos, cerrar popup de registro
                           Navigator.of(context).pop();
                           // Redirige directamente sin mostrar mensajes
@@ -121,9 +143,11 @@ class RegisterButton extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    LoginPage()), // Cambiar pagina a homepage2
+                                    LoginPage()),
                           );
                         } else {
+                          // Verifica si el widget todavía está montado
+                          if (!context.mounted) return;
                           // Error al registrar
                           final errorProfile =
                               json.decode(profileResponse.body);

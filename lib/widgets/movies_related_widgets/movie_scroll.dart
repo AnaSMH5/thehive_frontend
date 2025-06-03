@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/services/movies_service.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:frontend/templates/movie_details_page.dart';
 
 class MovieScroll extends StatelessWidget {
   const MovieScroll({super.key});
@@ -52,15 +53,25 @@ class MovieScroll extends StatelessWidget {
                   itemCount: snapshot.data!.length,
                   itemBuilder: (context, itemIndex, pageViewIndex) {
                     final movie = snapshot.data![itemIndex];
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: SizedBox(
-                        height: 300,
-                        width: 200,
-                        child: Image.network(
-                          'https://image.tmdb.org/t/p/w300${movie['poster_path']}',
-                          filterQuality: FilterQuality.high,
-                          fit: BoxFit.cover,
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MovieDetailsPage(movieId: movie['id']),
+                          ),
+                        );
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: SizedBox(
+                          height: 300,
+                          width: 200,
+                          child: Image.network(
+                            'https://image.tmdb.org/t/p/w300${movie['poster_path']}',
+                            filterQuality: FilterQuality.high,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     );

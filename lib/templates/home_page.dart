@@ -7,7 +7,6 @@ import 'package:frontend/widgets/utils/phrase_hexagon.dart';
 import 'package:frontend/widgets/movies_related_widgets/popular_movie_reviews.dart';
 import 'package:frontend/widgets/news_related_widgets/latest_news.dart';
 import 'package:frontend/widgets/utils/footer.dart';
-import 'package:frontend/widgets/news_related_widgets/news_card.dart';
 import 'package:frontend/services/movies_service.dart';
 
 class HomePage extends StatefulWidget {
@@ -123,8 +122,6 @@ class _HomePageState extends State<HomePage> {
                   final children = movies.map((movie) {
                     return MovieContainer(
                       movie: movie,
-                      destination:
-                          NewsDetailPage(), // Cambiá esto si querés ir a otra vista
                     );
                   }).toList();
                   return HorizontalCarousel(

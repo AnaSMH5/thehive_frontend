@@ -4,7 +4,6 @@ import 'package:frontend/widgets/utils/footer.dart';
 import 'package:frontend/widgets/movies_related_widgets/horizontal_carousel.dart';
 import 'package:frontend/services/movies_service.dart';
 import 'package:frontend/widgets/movies_related_widgets/movie_container.dart';
-import 'package:frontend/templates/login_page.dart';
 import 'package:frontend/widgets/movies_related_widgets/movie_scroll.dart';
 
 class MoviePage extends StatefulWidget {
@@ -70,7 +69,6 @@ class _MoviePageState extends State<MoviePage> {
                         return MovieContainer(
                           iteration: 1,
                           movie: movie,
-                          destination: LoginPage(),
                         );
                       }).toList();
                       return HorizontalCarousel(
@@ -100,7 +98,6 @@ class _MoviePageState extends State<MoviePage> {
                         return MovieContainer(
                           iteration: 2,
                           movie: movie,
-                          destination: LoginPage(),
                         );
                       }).toList();
                       return HorizontalCarousel(
@@ -130,7 +127,6 @@ class _MoviePageState extends State<MoviePage> {
                         return MovieContainer(
                           iteration: 3,
                           movie: movie,
-                          destination: LoginPage(),
                         );
                       }).toList();
                       return HorizontalCarousel(
@@ -160,7 +156,6 @@ class _MoviePageState extends State<MoviePage> {
                         return MovieContainer(
                           iteration: 4,
                           movie: movie,
-                          destination: LoginPage(),
                         );
                       }).toList();
                       return HorizontalCarousel(
@@ -190,7 +185,6 @@ class _MoviePageState extends State<MoviePage> {
                         return MovieContainer(
                           iteration: 5,
                           movie: movie,
-                          destination: LoginPage(),
                         );
                       }).toList();
                       return HorizontalCarousel(
@@ -220,7 +214,6 @@ class _MoviePageState extends State<MoviePage> {
                         return MovieContainer(
                           iteration: 6,
                           movie: movie,
-                          destination: LoginPage(),
                         );
                       }).toList();
                       return HorizontalCarousel(
@@ -250,7 +243,6 @@ class _MoviePageState extends State<MoviePage> {
                         return MovieContainer(
                           iteration: 7,
                           movie: movie,
-                          destination: LoginPage(),
                         );
                       }).toList();
                       return HorizontalCarousel(
@@ -280,7 +272,6 @@ class _MoviePageState extends State<MoviePage> {
                         return MovieContainer(
                           iteration: 8,
                           movie: movie,
-                          destination: LoginPage(),
                         );
                       }).toList();
                       return HorizontalCarousel(
@@ -310,7 +301,6 @@ class _MoviePageState extends State<MoviePage> {
                         return MovieContainer(
                           iteration: 9,
                           movie: movie,
-                          destination: LoginPage(),
                         );
                       }).toList();
                       return HorizontalCarousel(
@@ -340,7 +330,6 @@ class _MoviePageState extends State<MoviePage> {
                         return MovieContainer(
                           iteration: 10,
                           movie: movie,
-                          destination: LoginPage(),
                         );
                       }).toList();
                       return HorizontalCarousel(

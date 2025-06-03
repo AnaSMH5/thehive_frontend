@@ -233,12 +233,12 @@ class _ProfilePageState extends State<ProfilePage> {
                       },
                     ),
                     const SizedBox(height: 40.0),
-                    const Footer()
                   ],
                 ),
               ),
             ),
-          )
+          ),
+          const Footer(),
         ],
       ),
     );
