@@ -206,16 +206,15 @@ class _SideUserMenuState extends State<SideUserMenu> {
                   IconAndTextWidget(
                     icon: Icons.logout,
                     text: 'Logout',
-                    onTap: () async {
-                      await AuthService.logout();
-                      if (mounted) {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const RootPage()),
-                        );
-                      }
-                    },
+                      onTap: () async {
+                        final navigator = Navigator.of(context); // Captura antes del await
+                        await AuthService.logout();
+                        if (mounted) {
+                          navigator.pushReplacement(
+                            MaterialPageRoute(builder: (context) => const RootPage()),
+                          );
+                        }
+                      },
                   ),
                 ],
               ),
