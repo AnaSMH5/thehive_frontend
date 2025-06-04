@@ -14,10 +14,12 @@ class MovieContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String imageUrl = movie['poster_path'] != null
-        ? 'https://image.tmdb.org/t/p/w300${movie['poster_path']}'
+    final String? posterPath = movie['poster_path'];
+    final String imageUrl = (posterPath != null && posterPath.isNotEmpty)
+        ? 'https://image.tmdb.org/t/p/w300$posterPath'
         : '';
-    final double rating = (movie['vote_average'] as num).toDouble() / 2.0;
+    final voteAverage = movie['vote_average'];
+    final double rating = (voteAverage is num ? voteAverage.toDouble() : 0.0) / 2.0;
 
     return GestureDetector(
       onTap: () {

@@ -8,6 +8,7 @@ import 'package:frontend/widgets/navigation_widget/nav_text_button.dart';
 import 'package:frontend/templates/login_page.dart';
 import 'package:frontend/templates/movie_page.dart';
 import 'package:frontend/services/auth_service.dart';
+import 'package:frontend/templates/watchlist_page.dart';
 
 Future<String?> getImageRelPath() async {
   final token = await AuthService.getToken();
@@ -107,7 +108,7 @@ class _NavigationBarInState extends State<NavigationBarIn> {
               NavTextButton(
                 label: 'WATCHLIST',
                 destination:
-                    const LoginPage(), // Replace with your Watchlist page
+                    const WatchlistPage(), // Replace with your Watchlist page
               ),
               NavTextButton(
                 label: 'NEWS',
