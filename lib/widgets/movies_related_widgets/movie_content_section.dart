@@ -20,7 +20,8 @@ class MovieContentSection extends StatefulWidget {
 
 class _MovieContentSectionState extends State<MovieContentSection> {
   late double rating;
-  Map<String, Set<String>> userMovieLists = {}; // clave: nombre lista, valor: set de movie_ids
+  Map<String, Set<String>> userMovieLists =
+      {}; // clave: nombre lista, valor: set de movie_ids
   Map<String, String> listNameToId = {}; // tener list_id y hacer patch
   bool? isLoggedIn; // null = cargando, true = loggeado, false = no loggeado
   String? _token;
@@ -66,7 +67,9 @@ class _MovieContentSectionState extends State<MovieContentSection> {
         final ratings = data['ratings'] as List<dynamic>;
 
         final movieRating = ratings.firstWhere(
-          (r) => r['movie_id'] == movieId, orElse: () => null,);
+          (r) => r['movie_id'] == movieId,
+          orElse: () => null,
+        );
 
         setState(() {
           if (movieRating != null) {
@@ -122,7 +125,7 @@ class _MovieContentSectionState extends State<MovieContentSection> {
   }
 
   Future<void> fetchUserLists() async {
-    for (var entry in listNameToId.entries){
+    for (var entry in listNameToId.entries) {
       final listName = entry.key;
       final listId = entry.value;
 
@@ -135,21 +138,22 @@ class _MovieContentSectionState extends State<MovieContentSection> {
         final data = json.decode(response.body);
         final movieEntries = data['movies'] as List<dynamic>? ?? [];
 
-        final movieIds = movieEntries
-            .map((movie) => movie['movie_id'].toString())
-            .toSet();
+        final movieIds =
+            movieEntries.map((movie) => movie['movie_id'].toString()).toSet();
 
         setState(() {
           userMovieLists[listName] = movieIds;
         });
       } else {
-        debugPrint('Error al obtener lista $listName ($listId): ${response.statusCode}');
+        debugPrint(
+            'Error al obtener lista $listName ($listId): ${response.statusCode}');
       }
     }
   }
 
   bool isMovieInList(String listName) {
-    return userMovieLists[listName]?.contains(widget.movie.id.toString()) ?? false;
+    return userMovieLists[listName]?.contains(widget.movie.id.toString()) ??
+        false;
   }
 
   Future<void> toggleMovieInList(String listName) async {
@@ -198,6 +202,7 @@ class _MovieContentSectionState extends State<MovieContentSection> {
       // Puedes mostrar un AlertDialog si quieres
     }
   }
+
   Future<void> saveRating(double newRating) async {
     if (!isLoggedIn!) return;
 
@@ -212,9 +217,7 @@ class _MovieContentSectionState extends State<MovieContentSection> {
         'Authorization': 'Bearer $_token',
         'Content-Type': 'application/json',
       },
-      body: json.encode({
-        'rate': newRating
-      }),
+      body: json.encode({'rate': newRating}),
     );
 
     if (response.statusCode != 200 && response.statusCode != 201) {
@@ -236,7 +239,8 @@ class _MovieContentSectionState extends State<MovieContentSection> {
   Widget build(BuildContext context) {
     final movie = widget.movie;
     return Column(
-      mainAxisSize: MainAxisSize.min, // No ocupar más espacio vertical del necesario
+      mainAxisSize:
+          MainAxisSize.min, // No ocupar más espacio vertical del necesario
       children: [
         // Póster
         ClipRRect(
@@ -254,7 +258,8 @@ class _MovieContentSectionState extends State<MovieContentSection> {
           children: [
             _buildIcon("Vistas", Icons.visibility, Icons.visibility_outlined),
             _buildIcon("Me gusta", Icons.favorite, Icons.favorite_border),
-            _buildIcon("Watchlist", Icons.watch_later, Icons.watch_later_outlined),
+            _buildIcon(
+                "Watchlist", Icons.watch_later, Icons.watch_later_outlined),
             /*IconButton(icon: Icon(
               Icons.add_circle_outline,
               color: Theme.of(context).colorScheme.onSurface,
@@ -271,12 +276,14 @@ class _MovieContentSectionState extends State<MovieContentSection> {
               width: 200,
               child: CustomRatingBar(
                 initialRating: isLoggedIn! ? rating : 0.0,
-                ignoreGestures: !isLoggedIn!, // Logged in no puede ser null, si Logged In es true, ignore gestures is false
+                ignoreGestures:
+                    !isLoggedIn!, // Logged in no puede ser null, si Logged In es true, ignore gestures is false
                 itemSize: 40,
                 onChanged: (newRating) {
-                  saveRating(newRating);        // Guarda el rating en la API
+                  saveRating(newRating); // Guarda el rating en la API
                   setState(() {
-                    rating = newRating;         // Actualiza para reflejar el cambio al instante
+                    rating =
+                        newRating; // Actualiza para reflejar el cambio al instante
                   });
                 },
               ),
@@ -286,17 +293,17 @@ class _MovieContentSectionState extends State<MovieContentSection> {
         const SizedBox(height: 22.0),
         // Escribe una reseña
         // ESTO DEBE SER UN DESTINO A UN POPUP DONDE PUEDAS COLOCAR TU REVIEW, O QUE TE LLEVE A LA PARTE DE LA PAGINA DONDE LA ESCRIBAS
-        Text (
+        Text(
           'Write a Review',
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: Color(0xFFF9F9F9),
-              decoration: TextDecoration.underline),
+              color: Color(0xFFF9F9F9), decoration: TextDecoration.underline),
         ),
       ],
     );
   }
 
-  Widget _buildIcon(String listName, IconData filledIcon, IconData outlineIcon) {
+  Widget _buildIcon(
+      String listName, IconData filledIcon, IconData outlineIcon) {
     final isInList = isMovieInList(listName);
     return IconButton(
       icon: Icon(
@@ -304,7 +311,7 @@ class _MovieContentSectionState extends State<MovieContentSection> {
         // Si está logueado, isInList es true, muestra ícono lleno
         // SIno muestra el ícono bordeado
         isLoggedIn! ? (isInList ? filledIcon : outlineIcon) : outlineIcon,
-        color: Theme.of(context).colorScheme.onSurface,
+        color: Theme.of(context).colorScheme.onSecondary,
         size: 40,
       ),
       // Solo funciona si el usuario está logueado
