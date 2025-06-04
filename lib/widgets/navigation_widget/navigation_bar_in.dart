@@ -174,8 +174,10 @@ class _NavigationBarInState extends State<NavigationBarIn> {
                         radius: 18,
                         backgroundColor: const Color(0xFF50B2C0),
                         backgroundImage:
-                            imageUrl != null ? NetworkImage(imageUrl) : null,
-                        child: imageUrl == null
+                            (imageUrl != null && imageUrl.isNotEmpty)
+                                ? NetworkImage(imageUrl)
+                                : null,
+                        child: (imageUrl == null || imageUrl == '')
                             ? const Icon(Icons.person, color: Color(0xFFFFECB8))
                             : null,
                       ),

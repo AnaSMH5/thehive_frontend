@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:frontend/services/auth_service.dart';
@@ -123,20 +124,24 @@ class _SideUserMenuState extends State<SideUserMenu> {
                               child: CircleAvatar(
                                 radius: 28,
                                 backgroundColor: const Color(0xFF50B2C0),
-                                backgroundImage: imageUrl != null
+                                backgroundImage: (imageUrl != null &&
+                                        imageUrl is String &&
+                                        imageUrl.isNotEmpty)
                                     ? NetworkImage(imageUrl)
                                     : null,
-                                child: imageUrl == null
+                                child: (imageUrl == null || imageUrl == '')
                                     ? const Icon(Icons.person,
                                         color: Color(0xFFFFECB8))
                                     : null,
                               )),
-                          const SizedBox(height: 10.0),
-                          Text(
+                          const SizedBox(height: 5.0),
+                          AutoSizeText(
                             (userName).toUpperCase(),
+                            maxLines: 1,
+                            minFontSize: 20,
                             style: const TextStyle(
                               color: Color(0xFF351904),
-                              fontSize: 20.0,
+                              fontSize: 40.0,
                               fontFamily: 'Aboreto',
                             ),
                           ),
@@ -161,7 +166,9 @@ class _SideUserMenuState extends State<SideUserMenu> {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const ProfilePage()),
+                            builder: (context) => const ProfilePage(
+                                profileId:
+                                    "17fc09e8-b063-4211-b267-d453d578b7db")),
                       );
                     },
                   ),
@@ -206,15 +213,17 @@ class _SideUserMenuState extends State<SideUserMenu> {
                   IconAndTextWidget(
                     icon: Icons.logout,
                     text: 'Logout',
-                      onTap: () async {
-                        final navigator = Navigator.of(context); // Captura antes del await
-                        await AuthService.logout();
-                        if (mounted) {
-                          navigator.pushReplacement(
-                            MaterialPageRoute(builder: (context) => const RootPage()),
-                          );
-                        }
-                      },
+                    onTap: () async {
+                      final navigator =
+                          Navigator.of(context); // Captura antes del await
+                      await AuthService.logout();
+                      if (mounted) {
+                        navigator.pushReplacement(
+                          MaterialPageRoute(
+                              builder: (context) => const RootPage()),
+                        );
+                      }
+                    },
                   ),
                 ],
               ),

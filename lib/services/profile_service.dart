@@ -33,7 +33,7 @@ class AccountService {
     }
   }
 
-  Future<Map<String, dynamic>?> getProfileData() async {
+  Future<Map<String, dynamic>?> getProfileData({String? profileId}) async {
     final token = await AuthService.getToken();
     final userId = await AuthService.getUserId();
 
@@ -43,7 +43,7 @@ class AccountService {
     }
 
     final url = Uri.parse(
-        'https://thehive-api.up.railway.app/api/v1/profiles/my-profile');
+        'https://thehive-api.up.railway.app/api/v1/profiles/${profileId ?? 'my-profile'}');
 
     final response = await http.get(
       url,
@@ -58,7 +58,11 @@ class AccountService {
     } else {
       debugPrint('Error al obtener perfil: ${response.statusCode}');
       debugPrint('Cuerpo de la respuesta del error: ${response.body}');
-      return null;
+      final data = json.decode(response.body);
+      return {
+        ...{'status_code': response.statusCode},
+        ...data['detail']
+      };
     }
   }
 }

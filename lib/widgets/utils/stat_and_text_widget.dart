@@ -20,17 +20,20 @@ class StatAndTextWidget extends StatefulWidget {
 
 class _StatAndTextWidgetState extends State<StatAndTextWidget> {
   late Color _color;
+  late Color _colorText;
 
   @override
   void initState() {
     super.initState();
     _color = widget.color;
+    _colorText = const Color(0xFFF9F9F9);
   }
 
   void _onEnter(PointerEvent event) {
     if (widget.onTap != null) {
       setState(() {
         _color = const Color(0xFFECA204);
+        _colorText = const Color(0xFFECA204);
       });
     }
   }
@@ -38,6 +41,7 @@ class _StatAndTextWidgetState extends State<StatAndTextWidget> {
   void _onExit(PointerEvent event) {
     setState(() {
       _color = widget.color;
+      _colorText = const Color(0xFFF9F9F9);
     });
   }
 
@@ -65,7 +69,7 @@ class _StatAndTextWidgetState extends State<StatAndTextWidget> {
             Text(
               widget.text,
               style: TextStyle(
-                color: _color,
+                color: _colorText,
                 fontSize: 14.0,
                 fontFamily: 'Aboreto',
               ),

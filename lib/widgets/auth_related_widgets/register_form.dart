@@ -26,6 +26,18 @@ class RegisterForm extends StatefulWidget {
 }
 
 class _RegisterFormState extends State<RegisterForm> {
+  Future<void> _selectDate() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null && picked != DateTime.now()) {
+      widget.dateController.text = picked.toIso8601String().split('T').first;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -89,8 +101,10 @@ class _RegisterFormState extends State<RegisterForm> {
             const SizedBox(height: 25.0),
             CustomTextField(
                 controller: widget.dateController,
-                textLabel: 'Birth-Date (YYYY-MM-DD)',
+                textLabel: 'Birth-Date',
                 autovalidateMode: AutovalidateMode.onUserInteraction,
+                onTap: _selectDate,
+                readOnly: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'A birth date is required';

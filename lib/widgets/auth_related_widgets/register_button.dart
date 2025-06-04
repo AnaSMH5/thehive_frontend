@@ -23,9 +23,7 @@ class RegisterButton extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: Theme.of(context)
-              .colorScheme
-              .primary, // Hacer el fondo del Dialog transparente
+          backgroundColor: Theme.of(context).colorScheme.primary,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -47,14 +45,19 @@ class RegisterButton extends StatelessWidget {
                   tooltip: 'Close'),
             ],
           ),
-          content: RegisterForm(
-            formKey: formKey,
-            nameController: nameController,
-            usernameController: usernameController,
-            emailController: emailController,
-            dateController: dateController,
-            genderController: genderController,
-            passwordController: passwordController,
+          content: SizedBox(
+            height: 480, // Altura fija para el contenido
+            child: SingleChildScrollView(
+              child: RegisterForm(
+                formKey: formKey,
+                nameController: nameController,
+                usernameController: usernameController,
+                emailController: emailController,
+                dateController: dateController,
+                genderController: genderController,
+                passwordController: passwordController,
+              ),
+            ),
           ),
           actionsAlignment: MainAxisAlignment.center,
           actions: [
