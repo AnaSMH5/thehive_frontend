@@ -20,7 +20,7 @@ class RootPage extends StatelessWidget {
         }
         final loggedIn = snapshot.data!;
         if (loggedIn) {
-          return ProfilePage(); // tu home con sesión
+          return LoginPage(); // tu home con sesión
         } else {
           return HomePage(); // tu home sin sesión
         }

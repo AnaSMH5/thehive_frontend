@@ -166,9 +166,7 @@ class _SideUserMenuState extends State<SideUserMenu> {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const ProfilePage(
-                                profileId:
-                                    "17fc09e8-b063-4211-b267-d453d578b7db")),
+                            builder: (context) => const ProfilePage()),
                       );
                     },
                   ),
