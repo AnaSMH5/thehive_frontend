@@ -270,7 +270,7 @@ class _MovieContentSectionState extends State<MovieContentSection> {
             SizedBox(
               width: 200,
               child: CustomRatingBar(
-                initialRating: rating,
+                initialRating: isLoggedIn! ? rating : 0.0,
                 ignoreGestures: !isLoggedIn!, // Logged in no puede ser null, si Logged In es true, ignore gestures is false
                 itemSize: 40,
                 onChanged: (newRating) {

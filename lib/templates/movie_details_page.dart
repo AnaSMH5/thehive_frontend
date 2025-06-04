@@ -6,6 +6,8 @@ import 'package:frontend/widgets/movies_related_widgets/movie_content_section.da
 import 'package:frontend/widgets/utils/footer.dart';
 import 'package:frontend/services/movies_service.dart';
 import 'package:frontend/services/movie.dart';
+import 'package:frontend/widgets/movies_related_widgets/horizontal_carousel.dart';
+import 'package:frontend/widgets/movies_related_widgets/movie_container.dart';
 
 enum CrewCastTab { crew, cast }
 
@@ -134,6 +136,23 @@ class _MovieDetailsPageState extends State<MovieDetailsPage>{
                           ),
                         ],
                       ),
+                      SizedBox(height: 30.0),
+                      // Recommended
+                      // Verifica si hay recomendaciones y si están disponibles
+                      if (movie.recommendations.isNotEmpty)
+                        HorizontalCarousel(
+                          controller: ScrollController(),
+                          scrollOffset: MediaQuery.of(context).size.width * 0.7,
+                          title: 'Recommendations',
+                          children: movie.recommendations.map((recommendedMovie) {
+                            return MovieContainer(
+                              iteration: 1,  // Ajusta este valor según lo necesites
+                              movie: recommendedMovie,  // Pasa el objeto Movie de la recomendación
+                            );
+                          }).toList(),
+                        ),
+                      // Si no hay recomendaciones, muestra un SizedBox vacío
+                      if (movie.recommendations.isEmpty) const SizedBox(),
                     ],
                   ),
                 ),
