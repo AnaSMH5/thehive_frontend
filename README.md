@@ -6,10 +6,6 @@
 - Web: use on desktop and laptop computers.
 Right now, the layout and design may not display well on mobile phones or smaller screens.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
 ## Installation
 1. Install Flutter SDK: [Installation Guide](https://flutter.dev/docs/get-started/install)
 2. Clone the repository:
