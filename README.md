@@ -15,6 +15,7 @@ samples, guidance on mobile development, and a full API reference.
 2. Clone the repository:
 ```bash
 git clone https://github.com/AnaSMH5/thehive_frontend.git
+```
 3. Navigate to the project folder and install dependencies:
 ```bash
 cd thehive_frontend
